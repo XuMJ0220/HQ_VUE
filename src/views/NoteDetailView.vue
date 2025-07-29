@@ -11,12 +11,36 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 const route = useRoute();
 const note = ref(null);
+
+const addCopyButtons = () => {
+  const codeBlocks = document.querySelectorAll('.note-content pre');
+  codeBlocks.forEach(block => {
+    const button = document.createElement('button');
+    button.innerText = '复制';
+    button.className = 'copy-button';
+
+    button.addEventListener('click', () => {
+      const code = block.querySelector('code');
+      const text = code.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        button.innerText = '已复制!';
+        setTimeout(() => {
+          button.innerText = '复制';
+        }, 2000);
+      }).catch(err => {
+        console.error('无法复制文本: ', err);
+      });
+    });
+
+    block.appendChild(button);
+  });
+};
 
 const fetchNote = async () => {
   try {
@@ -28,6 +52,9 @@ const fetchNote = async () => {
     });
     if (response.data.code === 1021) { 
       note.value = response.data.detail;
+      nextTick(() => {
+        addCopyButtons();
+      });
     } else {
         console.error('获取笔记失败:', response.data.msg);
     }
@@ -105,12 +132,31 @@ onMounted(() => {
 }
 
 .note-content pre {
+  position: relative;
   background-color: #282c34;
   color: #abb2bf;
   padding: 1em;
   border-radius: 5px;
   overflow-x: auto;
   margin-bottom: 1em;
+}
+
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.note-content pre:hover .copy-button {
+  opacity: 1;
 }
 
 .note-content code {
