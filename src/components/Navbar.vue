@@ -11,7 +11,7 @@
     </ul>
     <div class="navbar-auth">
       <button class="btn-login">登录</button>
-      <button class="btn-signup">注册</button>
+      <router-link to="/register" class="btn-signup">注册</router-link>
     </div>
   </nav>
 </template>
@@ -27,7 +27,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   background-color: rgba(26, 26, 26, 0.8);
   color: #fff;
   position: fixed;
@@ -61,34 +61,32 @@ export default {
   color: #f0c419;
 }
 
-.navbar-auth button {
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+.navbar-auth .btn-login,
+.navbar-auth .btn-signup {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #f0c419;
+  border-radius: 25px;
+  background-color: transparent;
+  color: #f0c419;
+  text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 0.95em;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-.btn-login {
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid #fff;
-  margin-right: 0.5rem;
+.navbar-auth .btn-login {
+  margin-right: 0.8rem;
 }
 
-.btn-login:hover {
-  background-color: #fff;
+.navbar-auth .btn-login:hover,
+.navbar-auth .btn-signup:hover {
+  background-color: #f0c419;
   color: #1a1a1a;
-}
-
-.btn-signup {
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid #fff;
-}
-
-.btn-signup:hover {
-  background-color: #fff;
-  color: #1a1a1a;
+  box-shadow: 0 0 15px rgba(240, 196, 25, 0.5);
+  transform: translateY(-2px);
 }
 </style>
