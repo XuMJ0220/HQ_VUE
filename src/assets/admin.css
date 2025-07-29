@@ -198,6 +198,17 @@
 .modal-actions {
   display: flex;
   justify-content: flex-end;
+}
   gap: 15px;
   margin-top: 30px;
+}
+
+.note-content-view {
+  color: #e0e0e0; /* Light text color for readability */
+  background: transparent;
+}
+
+.note-content-view * {
+    color: #e0e0e0 !important;
+    background: transparent !important;
 }

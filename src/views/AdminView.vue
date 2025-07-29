@@ -20,7 +20,7 @@
           </thead>
           <tbody>
             <tr v-for="category in categories" :key="category.ID">
-              <td>{{ category.name }}</td>
+              <td @click="goToNotes(category.ID)" style="cursor: pointer;">{{ category.name }}</td>
               <td>
                 <div class="action-buttons">
                   <button @click="editCategory(category)" class="btn btn-secondary">编辑</button>
@@ -54,6 +54,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const goToNotes = (categoryId) => {
+  router.push({ name: 'note', params: { categoryId } });
+};
 import '@/assets/admin.css'; // 引入新的样式文件
 import axios from 'axios';
 import { loadFull } from "tsparticles";

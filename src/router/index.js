@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import LoginView from '../views/LoginView.vue'
 import AdminView from '../views/AdminView.vue'
+import NoteView from '../views/NoteView.vue'
+import NoteDetailView from '../views/NoteDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +29,22 @@ const router = createRouter({
       name: 'admin',
       component: AdminView,
       meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/admin/notes/:categoryId',
+      name: 'note',
+      component: NoteView
+    },
+    {
+      path: '/admin/notes/detail/:id',
+      name: 'note-detail',
+      component: NoteDetailView
+    },
+    {
+      path: '/test-html/:id',
+      name: 'test-html',
+      component: () => import('../views/TestHtml.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 })
