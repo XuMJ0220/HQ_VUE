@@ -1,38 +1,25 @@
 <template>
-  <div class="register-wrapper">
+  <div class="login-wrapper">
     <Particles
       id="tsparticles"
       :particlesInit="particlesInit"
       :particlesLoaded="particlesLoaded"
       :options="particleOptions"
     />
-    <div class="register-container">
-      <h2>创建账户</h2>
-      <p class="subtitle">加入我们, 开始您的旅程</p>
-      <form @submit.prevent="handleRegister">
+    <div class="login-container">
+      <h2>登录您的账户</h2>
+      <p class="subtitle">欢迎回来！</p>
+      <form @submit.prevent="handleLogin">
         <div class="form-group">
-          <input type="text" id="username" v-model="username" placeholder="请输入用户名" required autocomplete="off">
+          <input type="text" id="username" v-model="username" placeholder="请输入用户名" required>
         </div>
         <div class="form-group">
-          <input type="email" id="email" v-model="email" placeholder="请输入邮箱地址" required autocomplete="off">
+          <input type="password" id="password" v-model="password" placeholder="请输入密码" required>
         </div>
-        <div class="form-group">
-          <input type="password" id="password" v-model="password" placeholder="请输入密码" required autocomplete="new-password">
-        </div>
-        <div class="form-group">
-          <input type="password" id="re_password" v-model="re_password" placeholder="请再次输入密码" required autocomplete="new-password">
-        </div>
-        <div class="form-group">
-          <select id="gender" v-model="gender" required>
-            <option value="1">男</option>
-            <option value="2">女</option>
-            <option value="0">未知</option>
-          </select>
-        </div>
-        <button type="submit">注册</button>
+        <button type="submit">登录</button>
       </form>
       <div class="links">
-        <p>已有账户? <router-link to="/login">立即登录</router-link></p>
+        <p>还没有账户? <router-link to="/register">立即注册</router-link></p>
         <router-link to="/">返回首页</router-link>
       </div>
     </div>
@@ -47,10 +34,7 @@ export default {
   data() {
     return {
       username: '',
-      email: '',
       password: '',
-      re_password: '',
-      gender: 1, // 默认性别为男
       particleOptions: {
         background: {
           color: {
@@ -137,30 +121,26 @@ export default {
     async particlesLoaded(container) {
       console.log("Particles container loaded", container);
     },
-    handleRegister() {
-      if (this.password !== this.re_password) {
-        alert('两次输入的密码不一致');
-        return;
-      }
-
-      axios.post('/api/v1/user/signup', {
+    handleLogin() {
+      axios.post('/api/v1/user/login', {
         username: this.username,
         password: this.password,
-        re_password: this.re_password,
-        email: this.email,
-        gender: parseInt(this.gender),
       })
       .then(response => {
-        if (response.data.code === 1004) {
-          alert('注册成功');
-          this.$router.push('/'); // 注册成功后跳转到首页
+        if (response.data.code === 1006 || response.data.code === 1002) {
+          alert('登录成功');
+          // 保存token到localStorage
+          localStorage.setItem('token', response.data.detail.token);
+          localStorage.setItem('role', response.data.detail.role);
+          localStorage.setItem('username', response.data.detail.user_name);
+          this.$router.push('/'); // 登录成功后跳转到首页
         } else {
-          alert('注册失败: ' + response.data.msg);
+          alert('登录失败: ' + response.data.msg);
         }
       })
       .catch(error => {
-        console.error('注册失败:', error);
-        alert('注册失败，请稍后再试');
+        console.error('登录失败:', error);
+        alert('登录失败，请稍后再试');
       });
     },
   },
@@ -168,7 +148,7 @@ export default {
 </script>
 
 <style scoped>
-.register-wrapper {
+.login-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
@@ -187,7 +167,7 @@ export default {
   z-index: 0;
 }
 
-.register-container {
+.login-container {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -198,42 +178,41 @@ export default {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(12px);
   color: #e0e0e0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
 }
 
 h2 {
+  margin-bottom: 1rem;
   font-size: 2.5rem;
-  font-weight: bold;
-  color: #7f5af0;
-  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .subtitle {
   margin-bottom: 2rem;
+  font-size: 1.1rem;
   color: #ccc;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
-  text-align: left;
 }
 
-.form-group input,
-.form-group select {
+input[type="text"],
+input[type="password"] {
   width: 100%;
-  padding: 12px 15px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  color: #ffffff; /* 输入时文字颜色 */
+  padding: 1rem;
   font-size: 1rem;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
   transition: all 0.3s ease;
-  box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
   outline: none;
   background-color: #4a4a4a;
   color: #ffffff;
@@ -241,40 +220,41 @@ h2 {
   box-shadow: 0 0 8px rgba(108, 108, 108, 0.5);
 }
 
-.form-group input::placeholder {
-  color: #a0a0a0; /* 占位符颜色 */
-}
-
 button[type="submit"] {
   width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #7f5af0, #a77bf3);
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(45deg, #4a90e2, #50e3c2);
   border: none;
   border-radius: 8px;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 button[type="submit"]:hover {
-  box-shadow: 0 0 15px rgba(127, 90, 240, 0.8);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
 }
 
 .links {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+.links p {
+  margin-bottom: 1rem;
 }
 
 .links a {
-  color: #7f5af0;
+  color: #4a90e2;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .links a:hover {
-  color: #a77bf3;
+  color: #50e3c2;
+  text-decoration: underline;
 }
 </style>

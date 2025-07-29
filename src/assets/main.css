@@ -56,7 +56,7 @@ table {
 
 
 body {
-  background: linear-gradient(to left, #8f94fb, #4e54c8);
+  background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
   color: #fff;
   font-family: 'Roboto', sans-serif;
   min-height: 100vh;
@@ -64,8 +64,8 @@ body {
 }
 
 .area{
-  background: #4e54c8;  
-  background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);  
+  background: #0f0c29;  
+  background: -webkit-linear-gradient(to right, #0f0c29, #302b63, #24243e);  
   width: 100%;
   height:100vh;
   position: absolute;
