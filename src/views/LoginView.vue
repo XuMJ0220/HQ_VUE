@@ -13,8 +13,11 @@
         <div class="form-group">
           <input type="text" id="username" v-model="username" placeholder="请输入用户名" required>
         </div>
-        <div class="form-group">
-          <input type="password" id="password" v-model="password" placeholder="请输入密码" required>
+        <div class="form-group password-group">
+          <input :type="passwordFieldType" id="password" v-model="password" placeholder="请输入密码" required>
+          <span @click="togglePasswordVisibility" class="password-toggle-icon">
+            <i :class="['fas', passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash']"></i>
+          </span>
         </div>
         <button type="submit">登录</button>
       </form>
@@ -35,6 +38,7 @@ export default {
     return {
       username: '',
       password: '',
+      passwordFieldType: 'password',
       particleOptions: {
         background: {
           color: {
@@ -121,6 +125,9 @@ export default {
     async particlesLoaded(container) {
       console.log("Particles container loaded", container);
     },
+    togglePasswordVisibility() {
+      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    },
     handleLogin() {
       axios.post('/api/v1/user/login', {
         username: this.username,
@@ -197,6 +204,16 @@ h2 {
 
 .form-group {
   margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ccc;
 }
 
 input[type="text"],

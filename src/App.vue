@@ -27,6 +27,6 @@ import Navbar from './components/Navbar.vue'
 <style scoped>
 #app-container {
   height: 100%;
-  width: 100%;
+  overflow-y: auto;
 }
 </style>
